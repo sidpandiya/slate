@@ -2,13 +2,9 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
   - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -19,221 +15,125 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Sike API! You can use our API to access Sike API endpoints, which will provide information on personality traits, strengths and weaknesses. 
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+This simple documentation page will outline how to use the API. As of now, we only have POST request functionality. This is all you will need in order to access the full suite of tools that we can offer.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+The Sike API allows you to send text written by any individual, and returns a JSON object that gives you their personality traits, as well as a list of strengths and weaknesses. 
 
-# Authentication
+# Usage
 
-> To authorize, use this code:
+> To use the API, send a POST request using a language of your choice in the following JSON format:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+```json
+{
+    "text" : "Insert Text Here",
+    "apiKey" : "apiKey"
+}
 ```
 
-```python
-import kittn
+> Make sure to replace <code>apiKey</code> with your API key, and <code>"Insert Text Here"</code> with over 500 words of text.
 
-api = kittn.authorize('meowmeowmeow')
-```
+Sike uses API keys to allow access to the API. For security purposes, we will register your API key separately. Please contact us at sike.insights@gmail.com to register the key and start using the service. 
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+Sike expects for the API key to be included in all API requests to the server. Any requests that do not contain the API key will be rejected.
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>apiKey</code> with your personal API key.
 </aside>
 
-# Kittens
+<aside class="notice">
+The text must be over 500 words in length, otherwise the API will abort with an error code of 400. For optimal accuracy, we recomend sendint text that is at least 1200 words long. 
+</aside>
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
+> The above POST request returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+    "strengths": [
+        "Creative",
+        "Organized",
+        "Accommodating"
+    ],
+    "trait-values": [
+        [
+            "Creativity",
+            81
+        ],
+        [
+            "Organizedness",
+            73
+        ],
+        [
+            "Extraversion",
+            54
+        ],
+        [
+            "Accommodativeness",
+            72
+        ],
+        [
+        "Emotional Awareness",
+        56
+        ]
+    ],
+    "weaknesses": [
+        "May have 'head in the clouds'",
+        "May not work systematically",
+        "May reinvent the wheel",
+        "May miss some of the detail",
+        "May not learn from the past",
+        "May use an overly rigid approach",
+    ]
+}
 ```
 
-This endpoint retrieves all kittens.
+This is the only endpoint currently available, and will provide a queryable list of strengths, weaknesses as well as integer values (from 0-100) of personality traits.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST http://saffron-api.sikeinsights.com/v1/result`
 
-### Query Parameters
+### List of Possible Strengths
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Strength | 
+--------- | 
+Creative | 
+Practical |
+Organized |
+Flexible |
+People-Oriented |
+Independent |
+Accommodating |
+Skeptical |
+Emotionally Aware |
+Calm |
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Simple! You can use this list on your frontend and sort based on each strength.
 </aside>
 
-## Get a Specific Kitten
+### Weaknesses
 
-```ruby
-require 'kittn'
+We also provide a comprehensive list of weaknesses. These can easily be accessed by parsing the JSON and looking for the value associated with the <code>weaknesses</code> key. 
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+### Personality Trait Values
 
-```python
-import kittn
+The personality trait values are provided as a list of tuples. This list is the value of the <code>trait-values</code> key. The first element of the tuple contains the trait (one of the elements from the list below), and the second element gives an integer value (ranging from 0 to 100) of this trait.
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
-
+Trait | Complementary Trait 
+--------- | --------- 
+Creativity | Practicality
+Organizedness | Flexibility
+Extraversion | Intraversion
+Accommodativeness | Skepticism
+Creativity | Calm
+ 
+ > For example, an individual's creativity trait would be returned as an element of the list associated with the <code>trait-values</code> key in the JSON shown above. This element would look like this: 
+ 
 ```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
+[
+"Creativity",
+81
+]
 ```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
-
